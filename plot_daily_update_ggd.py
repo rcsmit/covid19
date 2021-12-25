@@ -7,6 +7,7 @@ Created on Tue Nov 16 22:02:09 2021
 @hk_nien
 """
 
+
 import matplotlib.pyplot as plt
 import tools
 import nlcovidstats as nlcs
@@ -42,31 +43,4 @@ if __name__ == '__main__':
     ggd_R.plot_R_graph_multiple_methods(num_days=100)
     plt.pause(0.25)
     nlcs.construct_Dfunc(nlcs.DELAY_INF2REP, plot=True)
-
-    #%%
-    if 0:
-        #%% check recent anomaly correction
-        plt.close('all')
-        nlcs.init_data(autoupdate=True)
-        #ggd_R.plot_rivm_and_ggd_positives(25, yscale=('linear', 7000, 25000))
-        #plt.pause(0.4)
-        ggd_R.plot_rivm_and_ggd_positives(25, True, yscale=('linear', 5000, 25000))
-
-        #%% Show TvT performance
-        ggd_R.plot_R_graph_multiple_methods(
-            num_days=240, ylim=(-0.9, 4.2),
-            methods=('rivm', 'melding', 'tvt'),
-            )
-        #%% GGD tests in regions
-        fig, ax = plt.subplots(figsize=(7, 4), tight_layout=True)
-        for rre in ['Utrecht', 'Midden- en West-Brabant', 'Groningen', 'Drenthe', 'Twente']:
-            df = ggd_data.load_ggd_pos_tests(region_regexp=rre)
-            ax.step(df.index[-100:], df['n_tested'][-100:], where='mid', label=rre)
-        ax.set_yscale('log')
-        ax.set_title('Uitgevoerde GGD tests per regio')
-        ax.set_xlabel('Datum monstername')
-        ax.legend()
-        import tools
-        tools.set_xaxis_dateformat(ax)
-        fig.show()
 

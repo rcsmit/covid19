@@ -43,9 +43,7 @@ def pvap_water(TC):
     # Antoine equation
     a, b, c = 8.07131, 1730.63, 233.426
     p_mmHg = 10**(a - (b/(c+TC)))
-    p_Pa = p_mmHg * 133.3
-
-    return p_Pa
+    return p_mmHg * 133.3
 
 def plot_rh_curves():
     """Plot RH curves outdoors/indoors.

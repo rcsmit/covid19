@@ -52,7 +52,7 @@ def update_ggd_tests(force=False):
 
 
     url = 'https://data.rivm.nl/covid-19/COVID-19_uitgevoerde_testen.csv'
-    print(f'Getting latest GGD test data from RIVM...')
+    print('Getting latest GGD test data from RIVM...')
     with urllib.request.urlopen(url) as response:
         csv_bytes = response.read()
 

@@ -9,6 +9,7 @@ Created on Mon Apr  5 14:37:44 2021
 
 
 
+
 import matplotlib.pyplot as plt
 import tools
 import nlcovidstats as nlcs
@@ -29,7 +30,7 @@ if __name__ == '__main__':
 
     pad_frames = 10
 
-    for i, lastday in enumerate(range(-172, 0, 1)):
+    for i, lastday in enumerate(range(-172, 0)):
         fig = nlcs.plot_Rt(ndays=100, lastday=lastday, delay=nlcs.DELAY_INF2REP,
                            source='r7', correct_anomalies=True, mode='return_fig',
                            ylim=(0.65, 1.6))
@@ -48,7 +49,7 @@ if __name__ == '__main__':
     os.system('rm video_out-nogit/Rt_video.mp4')
 
     # Convert to video:
-    print(f'Converting to mp4')
+    print('Converting to mp4')
     frame_rate = 5
     cmd = (
         f'ffmpeg -framerate {frame_rate}'

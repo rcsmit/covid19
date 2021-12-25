@@ -7,6 +7,7 @@ Created on Sat Apr  3 18:03:40 2021
 """
 
 
+
 import numpy as np
 import scipy.interpolate
 import pandas as pd
@@ -69,6 +70,7 @@ vac_recs_full = [
 vdf = pd.DataFrame.from_records(vac_recs, columns=['Date', 'ncum'])
 fvdf = pd.DataFrame.from_records(vac_recs_full, columns=['Date', 'ncum'])
 
+dt_x = 21 # 3 weeks
 for df in [vdf, fvdf]:
     df['Date'] = pd.to_datetime(df['Date'])
     df.set_index('Date', inplace=True)
@@ -76,7 +78,6 @@ for df in [vdf, fvdf]:
     # Extrapolate 3 weeks
     dt = (df.index[-1] - df.index[-2]) / pd.Timedelta('1 d')
     ncum_a, ncum_b = df.iloc[-2:]['ncum']
-    dt_x = 21 # 3 weeks
     ncum_x = ncum_b + (ncum_b-ncum_a) / dt * dt_x
     tm_x = df.index[-1] + pd.Timedelta(dt_x, 'd')
     df_x = pd.DataFrame(dict(ncum=ncum_x), index=[tm_x])

@@ -17,8 +17,7 @@ def _ywd2date(ywd):
 
     twelvehours = pd.Timedelta('12 h')
 
-    dt = datetime.datetime.strptime(ywd, "%G-W%V-%w") + twelvehours
-    return dt
+    return datetime.datetime.strptime(ywd, "%G-W%V-%w") + twelvehours
 
 
 def _add_odds_column(df):
@@ -134,14 +133,6 @@ def _get_data_countries_weeknos():
     # Item 1 in each list: source URLs
     country_records = {
         'DK (seq; {date})': [
-            dict(ccode='DK', date='2021-01-01', is_seq=True, is_recent=False),
-            ['https://covid19.ssi.dk/-/media/cdn/files/opdaterede-data-paa-ny-engelsk-virusvariant-sarscov2-cluster-b117--01012021.pdf?la=da'],
-            ('2020-W49-4', 0.002),
-            ('2020-W50-4', 0.005),
-            ('2020-W51-4', 0.009),
-            ('2020-W52-4', 0.023)
-            ],
-        'DK (seq; {date})': [
             dict(ccode='DK', date='2021-02-14', is_seq=True, is_recent=True),
             ['https://www.covid19genomics.dk/statistics'],
             ('2020-W48-4', 0.002),
@@ -150,42 +141,46 @@ def _get_data_countries_weeknos():
             ('2020-W51-4', 0.008),
             ('2020-W52-4', 0.020),
             ('2020-W53-4', 0.024),
-            ('2021-W01-4', 0.040), # last updated 2021-02-05
+            ('2021-W01-4', 0.040),  # last updated 2021-02-05
             ('2021-W02-4', 0.075),
             ('2021-W03-4', 0.128),
-            ('2021-W04-4', 0.191), # last updated 2021-02-05
-            ('2021-W05-4', 0.271), # last updated before 2021-02-14
-            ],
+            ('2021-W04-4', 0.191),  # last updated 2021-02-05
+            ('2021-W05-4', 0.271),  # last updated before 2021-02-14
+        ],
         'NL (seq; {date}; OMT)': [
             dict(ccode='NL', date='2021-01-01', is_seq=True, is_recent=False),
-            ['https://www.tweedekamer.nl/kamerstukken/brieven_regering/detail?id=2021Z00794&did=2021D02016',
-             'https://www.rivm.nl/coronavirus-covid-19/omt'],
+            [
+                'https://www.tweedekamer.nl/kamerstukken/brieven_regering/detail?id=2021Z00794&did=2021D02016',
+                'https://www.rivm.nl/coronavirus-covid-19/omt',
+            ],
             ('2020-W49-4', 0.011),
             ('2020-W50-4', 0.007),
             ('2020-W51-4', 0.011),
             ('2020-W52-4', 0.014),
             ('2020-W53-4', 0.052),
-            ('2021-W01-4', 0.119), # preliminary
-            ],
+            ('2021-W01-4', 0.119),  # preliminary
+        ],
         'NL (seq; {date})': [
             dict(ccode='NL', date='2021-02-07', is_seq=True, is_recent=True),
-            ['https://www.tweedekamer.nl/kamerstukken/brieven_regering/detail?id=2021Z00794&did=2021D02016',
-             'https://www.tweedekamer.nl/sites/default/files/atoms/files/20210120_technische_briefing_commissie_vws_presentati_jaapvandissel_rivm_0.pdf',
-             'https://www.tweedekamer.nl/downloads/document?id=00588209-3f6b-4bfd-a031-2d283129331c&title=98e%20OMT%20advies%20deel%201%20en%20kabinetsreactie',
-             'https://www.tweedekamer.nl/downloads/document?id=be0cb7fc-e3fd-4a73-8964-56f154fc387e&title=Advies%20n.a.v.%2099e%20OMT%20deel%202.pdf'
-             ],
-            ('2020-W49-5', 0.011), # OMT #96 >>
+            [
+                'https://www.tweedekamer.nl/kamerstukken/brieven_regering/detail?id=2021Z00794&did=2021D02016',
+                'https://www.tweedekamer.nl/sites/default/files/atoms/files/20210120_technische_briefing_commissie_vws_presentati_jaapvandissel_rivm_0.pdf',
+                'https://www.tweedekamer.nl/downloads/document?id=00588209-3f6b-4bfd-a031-2d283129331c&title=98e%20OMT%20advies%20deel%201%20en%20kabinetsreactie',
+                'https://www.tweedekamer.nl/downloads/document?id=be0cb7fc-e3fd-4a73-8964-56f154fc387e&title=Advies%20n.a.v.%2099e%20OMT%20deel%202.pdf',
+            ],
+            ('2020-W49-5', 0.011),  # OMT #96 >>
             ('2020-W50-5', 0.007),
             ('2020-W51-5', 0.011),
             ('2020-W52-5', 0.020),
-            ('2020-W53-5', 0.050), # << OMT #96
-            ('2021-W01-5', 0.090), # TK briefing (read from figure ±0.005)
-            ('2021-W02-5', 0.198), # OMT #98 (31 Jan)
-            ('2021-W03-5', 0.241), # OMT #99
-            ],
+            ('2020-W53-5', 0.050),  # << OMT #96
+            ('2021-W01-5', 0.090),  # TK briefing (read from figure ±0.005)
+            ('2021-W02-5', 0.198),  # OMT #98 (31 Jan)
+            ('2021-W03-5', 0.241),  # OMT #99
+        ],
         'UK (seq; {date})': [
             dict(ccode='UK', date='2021-01-21', is_seq=True, is_recent=True),
-            ['https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-risk-related-to-spread-of-new-SARS-CoV-2-variants-EU-EEA-first-update.pdf',
+            [
+                'https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-risk-related-to-spread-of-new-SARS-CoV-2-variants-EU-EEA-first-update.pdf',
             ],
             # Fig. 2. (traced, +/- 0.001 accuracy)
             ('2020-W43-4', 0.003),
@@ -200,13 +195,14 @@ def _get_data_countries_weeknos():
             ('2020-W52-4', 0.539),
             ('2020-W53-4', 0.693),
             # ('2021-W01-4', ...),
-            ],
+        ],
         'PT (seq; {date})': [
             dict(ccode='PT', date='2021-02-11', is_seq=True, is_recent=True),
-            ['https://virological.org/t/tracking-sars-cov-2-voc-202012-01-lineage-b-1-1-7-dissemination-in-portugal-insights-from-nationwide-rt-pcr-spike-gene-drop-out-data/600',
-             'https://virological.org/t/tracking-sars-cov-2-voc-202012-01-lineage-b-1-1-7-dissemination-in-portugal-insights-from-nationwide-rt-pcr-spike-gene-drop-out-data/600/4',
-             'https://virological.org/t/tracking-sars-cov-2-voc-202012-01-lineage-b-1-1-7-dissemination-in-portugal-insights-from-nationwide-rt-pcr-spike-gene-drop-out-data/600/7',
-             ],
+            [
+                'https://virological.org/t/tracking-sars-cov-2-voc-202012-01-lineage-b-1-1-7-dissemination-in-portugal-insights-from-nationwide-rt-pcr-spike-gene-drop-out-data/600',
+                'https://virological.org/t/tracking-sars-cov-2-voc-202012-01-lineage-b-1-1-7-dissemination-in-portugal-insights-from-nationwide-rt-pcr-spike-gene-drop-out-data/600/4',
+                'https://virological.org/t/tracking-sars-cov-2-voc-202012-01-lineage-b-1-1-7-dissemination-in-portugal-insights-from-nationwide-rt-pcr-spike-gene-drop-out-data/600/7',
+            ],
             ('2020-W49-4', 0.019),
             ('2020-W50-4', 0.009),
             ('2020-W51-4', 0.013),
@@ -217,38 +213,46 @@ def _get_data_countries_weeknos():
             ('2021-W03-4', 0.247),
             ('2021-W04-4', 0.365),
             ('2021-W05-4', 0.427),
-            ],
+        ],
         'CH (seq; {date})': [
             dict(ccode='CH', date='2021-02-14', is_seq=True, is_recent=True),
-            ['https://sciencetaskforce.ch/nextstrain-phylogentische-analysen/'],
+            [
+                'https://sciencetaskforce.ch/nextstrain-phylogentische-analysen/'
+            ],
             ('2020-W51-4', 0.0004),
             ('2020-W52-4', 0.0043),
             ('2020-W53-4', 0.0074),
             ('2021-W01-4', 0.0153),
             ('2021-W02-4', 0.0329),
             ('2021-W03-4', 0.0881),
-            ('2021-W04-4', 0.158), # last updated ca. 2021-02-05
-            ('2021-W05-4', 0.235), # last updated before 2021-02-14
-            ],
-        # https://assets.gov.ie/121054/55e77ccd-7d71-4553-90c9-5cd6cdee7420.pdf (p. 53) up to wk 1
-        # https://assets.gov.ie/121662/184e8d00-9080-44aa-af74-dbb13b0dcd34.pdf (p. 2, bullet 8) wk 2/3
+            ('2021-W04-4', 0.158),  # last updated ca. 2021-02-05
+            ('2021-W05-4', 0.235),  # last updated before 2021-02-14
+        ],
         'IE (SGTF; {date})': [
-            dict(ccode='IE', date='2021-02-04', is_seq=False, is_sgtf=True, is_recent=True),
-            ['https://assets.gov.ie/121054/55e77ccd-7d71-4553-90c9-5cd6cdee7420.pdf', # (p. 53) up to wk 1
-             'https://assets.gov.ie/121662/184e8d00-9080-44aa-af74-dbb13b0dcd34.pdf', # (p. 2, bullet 8) wk 2/3
-             'https://assets.gov.ie/122798/644f5185-5067-4bd4-89fa-8cb75670821d.pdf', # p. 2, bullet 5
-             ],
+            dict(
+                ccode='IE',
+                date='2021-02-04',
+                is_seq=False,
+                is_sgtf=True,
+                is_recent=True,
+            ),
+            [
+                'https://assets.gov.ie/121054/55e77ccd-7d71-4553-90c9-5cd6cdee7420.pdf',  # (p. 53) up to wk 1
+                'https://assets.gov.ie/121662/184e8d00-9080-44aa-af74-dbb13b0dcd34.pdf',  # (p. 2, bullet 8) wk 2/3
+                'https://assets.gov.ie/122798/644f5185-5067-4bd4-89fa-8cb75670821d.pdf',  # p. 2, bullet 5
+            ],
             ('2020-W50-4', 0.014),
             ('2020-W51-4', 0.086),
             ('2020-W52-4', 0.163),
             ('2020-W53-4', 0.262),
-            ('2021-W01-4', 0.463), # 21 Jan
+            ('2021-W01-4', 0.463),  # 21 Jan
             ('2021-W02-4', 0.58),
-            ('2021-W03-4', 0.63), # 28 Jan
-            ('2021-W04-4', 0.695), # 4 Feb
-            ('2021-W05-4', 0.75), # 4 Feb
-            ]
-        }
+            ('2021-W03-4', 0.63),  # 28 Jan
+            ('2021-W04-4', 0.695),  # 4 Feb
+            ('2021-W05-4', 0.75),  # 4 Feb
+        ],
+    }
+
     set_date_in_records_keys(country_records)
     cdict = {}
     meta_records = []
@@ -328,11 +332,7 @@ def _get_data_England_regions(subtract_bg=True):
             region = f'England (multiple regions; {pub_date})'
 
         # estimate false-positive for SGTF as representing B.1.1.7
-        if subtract_bg:
-            pct_bg = df['pct_sgtf'].min()
-        else:
-            pct_bg = 0.0
-
+        pct_bg = df['pct_sgtf'].min() if subtract_bg else 0.0
         df['n_b117'] = ((df['pct_sgtf'] - pct_bg)*(0.01/28 * regions_pop[region])).astype(int)
         df['n_oth'] = ((df['pct_othr'] + pct_bg)*(0.01/28 * regions_pop[region])).astype(int)
 
@@ -362,7 +362,7 @@ def _get_data_England_regions(subtract_bg=True):
         df_combi[col] = np.around(df_combi[col], 0).astype(int)
 
     meta_records = []
-    for desc in cdict.keys():
+    for desc in cdict:
         region = re.match('(.*) \(', desc).group(1)
         record = dict(
             desc=desc,

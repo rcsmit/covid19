@@ -343,11 +343,7 @@ def construct_Dfunc(delays, plot=False):
         fill_value=(Ds[0], Ds[-1]))
 
     Dmin, Dmax = np.min(Ds0), np.max(Ds0)
-    if Dmin == Dmax:
-        delay_str = f'{Dmin:.0f}'
-    else:
-        delay_str = f'{Dmin:.0f}-{Dmax:.0f}'
-
+    delay_str = f'{Dmin:.0f}' if Dmin == Dmax else f'{Dmin:.0f}-{Dmax:.0f}'
     if plot:
         fig, ax = plt.subplots(1, 1, figsize=(7, 3), tight_layout=True)
         tsx = np.linspace(
@@ -509,9 +505,9 @@ def _add_event_labels(ax, tmin, tmax, with_ribbons=True, textbox=False, bottom=T
     ribbon_hgt = ribbon_yspan*0.1 # ribbon height
     ribbon_ystep = ribbon_yspan*0.2
     df_events = DFS['events']
-    ribbon_colors = ['#ff0000', '#cc7700'] * 10
     if df_events is not None:
         i_res = 0
+        ribbon_colors = ['#ff0000', '#cc7700'] * 10
         for _, (res_t, res_t_end, res_d, flags) in df_events.reset_index().iterrows():
             if not (tmin <= res_t <= tmax):
                 continue
@@ -580,6 +576,7 @@ def plot_daily_trends(ndays=100, lastday=-1, mun_regexp=None, region_list=None,
 
     labels = [] # tuples (y, txt)f
     citystats = [] # tuples (Rt, T2, cp100k, cwk, popk, city_name)
+    delta_t = 7
     for region in region_list:
         df1, n_inw = get_region_data(region, lastday=lastday)
         df1 = df1.iloc[-ndays:]
@@ -600,7 +597,6 @@ def plot_daily_trends(ndays=100, lastday=-1, mun_regexp=None, region_list=None,
             color = None
 
         ax.semilogy(df1[dnc_column]*1e5, fmt, color=color, label=reg_label, markersize=psize)
-        delta_t = 7
         i0 = dict(raw=-1, r7=-3, sg=-3)[source]
         t_double, Rt = get_t2_Rt(df1[dnc_column], delta_t, i0=i0)
         citystats.append((np.around(Rt, 2), np.around(t_double, 2),
@@ -609,7 +605,7 @@ def plot_daily_trends(ndays=100, lastday=-1, mun_regexp=None, region_list=None,
                           int(n_inw/1e3 + .5), reg_label))
 
         if abs(t_double) > 60:
-            texp = f'Stabiel'
+            texp = 'Stabiel'
         elif t_double > 0:
             texp = f'×2: {t_double:.3g} d'
         elif t_double < 0:
@@ -813,6 +809,7 @@ def plot_Rt(ndays=100, lastday=-1, delay=9, regions='Nederland', source='r7',
         regions = ['DUMMY']
 
 
+    fmt = 'o'
     for i_region, (region, color, marker) in enumerate(zip(regions, colors, markers)):
 
         df1, _npop = get_region_data(
@@ -831,7 +828,6 @@ def plot_Rt(ndays=100, lastday=-1, delay=9, regions='Nederland', source='r7',
         else:
             delay_str = f'{delay_min:.2g}-{delay_max:.2g}'
 
-        fmt = 'o'
         psize = 5 if ndays < 30 else 3
 
         if region.startswith('POP:'):
@@ -898,7 +894,7 @@ def plot_Rt(ndays=100, lastday=-1, delay=9, regions='Nederland', source='r7',
 
             labels.append((Rt[-1], f' {label}'))
 
-    if len(labels) == 0:
+    if not labels:
         print('Note: no regions to plot.')
 
     if Rt_rivm is not None:
@@ -934,11 +930,7 @@ def plot_Rt(ndays=100, lastday=-1, delay=9, regions='Nederland', source='r7',
         dfa = dfa.loc[dfa['fraction'] > 0]
         anom_date = dfa.index[-1].strftime('%d %b') # most recent anomaly date
         xnotes.append(f'correctie pos. tests o.a. {anom_date}')
-    if xnotes:
-        xnotes = ", ".join([""]+xnotes)
-    else:
-        xnotes = ''
-
+    xnotes = ", ".join([""]+xnotes) if xnotes else ''
     ax.set_title(f'Reproductiegetal o.b.v. positieve tests; laatste {iex} dagen zijn een extrapolatie\n'
                  f'(Generatie-interval: {Tc:.3g} dg, rapportagevertraging {delay_str} dg{xnotes})'
                  )

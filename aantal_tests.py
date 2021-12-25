@@ -6,6 +6,7 @@ Created on Wed Feb 17 15:31:12 2021
 @author: @hk_nien
 """
 
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import tools
@@ -39,14 +40,30 @@ fig.show()
 #%% oost-west
 
 vrcodes = {
-    'all': set(x for x in dft_full['Security_region_code'].unique()
-               if isinstance(x, str))
+    'all': {
+        x
+        for x in dft_full['Security_region_code'].unique()
+        if isinstance(x, str)
+    },
+    'low_pollen_20210226': {
+        'VR01',
+        'VR02',
+        'VR03',
+        'VR25',
+        'VR10',
+        'VR11',
+        'VR12',
+        'VR13',
+        'VR14',
+        'VR15',
+        'VR16',
+        'VR17',
+        'VR18',
+        'VR19',
+        'VR24',
+    },
 }
 
-vrcodes['low_pollen_20210226'] = {
-    'VR01', 'VR02', 'VR03', 'VR25', 'VR10', 'VR11', 'VR12', 'VR13',
-    'VR14', 'VR15', 'VR16', 'VR17', 'VR18', 'VR19', 'VR24'
-    }
 
 vrcodes['high_pollen_20210226'] = vrcodes['all'] - vrcodes['low_pollen_20210226']
 

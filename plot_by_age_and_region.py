@@ -98,7 +98,7 @@ def get_summary_hr_age_by_date_range(
             dates.append(date)
         date += pd.Timedelta(1, 'd')
 
-    if len(dates) > 0:
+    if dates:
         print(f'Processing casus data for {len(dates)} dates. This may take a while.')
         # shuffle order so that the progress indicator doesn't slow down
         # towards the end when the data is large.
@@ -152,7 +152,7 @@ def plot_growth_factors_by_age_and_holiday_region(
 
     df = get_summary_hr_age_by_date_range(date_a, date_b)
     df_delta = df.diff().iloc[1:]
-    df_delta = df_delta[[c for c in df.columns if not 'Other' in c]]
+    df_delta = df_delta[[c for c in df.columns if 'Other' not in c]]
 
     df_delta7 = df_delta.rolling(7, center=True).mean()
 
@@ -167,11 +167,7 @@ def plot_growth_factors_by_age_and_holiday_region(
     # df_delta7 = np.around(df_delta7, 1)
 
     df_gf = df_delta7.iloc[7:] / df_delta7.iloc[:-7].values
-    if estimate_last3:
-        df_gf = df_gf.iloc[3:]
-    else:
-        df_gf = df_gf.iloc[3:-4]
-
+    df_gf = df_gf.iloc[3:] if estimate_last3 else df_gf.iloc[3:-4]
     df_gf.index = df_gf.index + pd.Timedelta(time_shift, 'd')
 
     fig, (ax_gf, ax_gfr) = plt.subplots(

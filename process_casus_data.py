@@ -500,19 +500,3 @@ if __name__ == '__main__':
     plt.rcParams['axes.titlesize'] = plt.rcParams['xtick.labelsize']
 
     plots_for_report('nc10')
-
-    if 0 and True: # False during development
-
-        ## This will create all plots (both on-screen and stored as files).
-        ## Warning: major screen clutter.
-        plots_for_report(show=True)
-
-        ## This will create all plots as files.
-        # plots_for_report(show=False)
-
-        ## This will create and show one plot. See doc of plots_for_report.
-        plots_for_report('fixj2', show=True)
-
-
-        # pause (for command-line use)
-        tools.pause_commandline('Press Enter to end.')
