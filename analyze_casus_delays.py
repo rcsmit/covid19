@@ -128,12 +128,6 @@ def plot_casus_summary(df, sd_rel_irange=(-21, 0), fd_irange=(-21, None)):
 
 plt.close('all')
 
-if 0:
-    import casus_analysis as ca
-    # Warning: slow! Needs to process 30+ GB of data.
-    ca.create_merged_summary_csv()
-if 0:
-    df = load_summary_df()
 #%%
 for i_dow in range(0, -5, -1):
     plot_casus_summary(df, (-18, 0), (-56+i_dow, None, 7))

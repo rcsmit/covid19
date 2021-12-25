@@ -78,14 +78,13 @@ def get_municipality_data():
     """
 
     global DF_MUN
-    if DF_MUN is None or 1:
-        df = pd.read_csv(DATA_PATH / 'municipalities.csv')
-        df.set_index('Municipality', inplace=True)
-        df_bible = pd.read_csv(DATA_PATH / 'mun_biblebelt_urk.csv',
-                               comment='#', sep=';')
-        df['bible'] = False
-        df.loc[df_bible['Gemeentenaam'].values, 'bible'] = True
-        DF_MUN = df
+    df = pd.read_csv(DATA_PATH / 'municipalities.csv')
+    df.set_index('Municipality', inplace=True)
+    df_bible = pd.read_csv(DATA_PATH / 'mun_biblebelt_urk.csv',
+                           comment='#', sep=';')
+    df['bible'] = False
+    df.loc[df_bible['Gemeentenaam'].values, 'bible'] = True
+    DF_MUN = df
 
     return DF_MUN.copy()
 
@@ -312,7 +311,7 @@ def get_holiday_regions_by_ggd():
          'GGD Zeeland'
          ]
     }
-    for k in regions_hol2ggd.keys():
+    for k in regions_hol2ggd:
         regions_hol2ggd[k] = sorted(regions_hol2ggd[k])
 
     return regions_hol2ggd

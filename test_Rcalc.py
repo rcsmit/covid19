@@ -32,9 +32,7 @@ def calc_R_from_cases(daily_pos, delay=7, Tc=4.0):
     index = npos.index[1:-1] - delay
     Rts = pd.Series(index=index, data=Rt, name='Rt').iloc[3:]
 
-    df = pd.DataFrame(dict(npos=npos, npos7=npos7, Rt=Rts))
-
-    return df
+    return pd.DataFrame(dict(npos=npos, npos7=npos7, Rt=Rts))
 
 def add_noise(npos, f=0.05, seed=2):
     """Add noise, stdev = f*value, truncated distribution"""

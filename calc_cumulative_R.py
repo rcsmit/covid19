@@ -52,8 +52,7 @@ def get_Rt_mine(mindate, maxdate, slide_delay=True, cdf=None):
              for t in [mindate, maxdate]
              ]
     index = pd.date_range(*tlims, freq='1d')
-    R_mine = pd.Series(r_interp(index.astype(int)), index=index)
-    return R_mine
+    return pd.Series(r_interp(index.astype(int)), index=index)
 
 
 def get_Rt_test_case(mindate, maxdate, case='step', slide_delay=True):

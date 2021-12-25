@@ -151,8 +151,7 @@ def _find_casus_fpath(date):
         fpath = dirpath / fname
         if fpath.exists():
             return fpath
-    else:
-        raise FileNotFoundError(f'{fname} in {len(dirpaths)} directories.')
+    raise FileNotFoundError(f'{fname} in {len(dirpaths)} directories.')
 
 
 def load_casus_data(date):
@@ -264,7 +263,7 @@ def download_rivm_casus_files(force_today=False):
             fdates_missing.append(ymd)
         tm += pd.Timedelta(1, 'd')
 
-    if len(fdates_missing) == 0:
+    if not fdates_missing:
         print('Casus files up to date.')
         return 0
 
@@ -353,7 +352,7 @@ def load_merged_summary(date_lo, date_hi, reprocess='auto'):
         fdates.append(date_str)
         date += pd.Timedelta(1, 'd')
 
-    if len(fdates) > 0:
+    if fdates:
         msg = f'Loading casus data for {len(fdates)} days (using {{ncpu}} processes)'
         with PoolNCPU(msg) as pool:
             dfsums = pool.map(_load_one_df, fdates)
@@ -363,9 +362,7 @@ def load_merged_summary(date_lo, date_hi, reprocess='auto'):
 
     if len(dfsums) == 0:
         raise ValueError('No data.')
-    dfsmerged = pd.concat(dfsums)
-
-    return dfsmerged
+    return pd.concat(dfsums)
 
 def create_merged_summary_csv(date_lo='2020-07-01', reprocess='auto'):
     """Load lots fo data, write to data/casus_history_summary.csv.
@@ -498,10 +495,7 @@ def add_deltas_to_summary(df):
         for col in ['DOO', 'DPL', 'DON', 'Dtot']:
             dcol = f'd{col}'
             deltas[dcol] = dfcurr[col] - dfprev[col]
-            if dtf in dfcurr.index:
-                last_entry = dfcurr.loc[dtf, col] # there is no previous
-            else:
-                last_entry = 0
+            last_entry = dfcurr.loc[dtf, col] if dtf in dfcurr.index else 0
             deltas[dcol].loc[dtf] = last_entry
 
         df_deltas = pd.DataFrame(deltas)
@@ -667,7 +661,7 @@ class DOOCorrection:
         if n <= m:
             raise ValueError(f'm={m}: must be smaller than date range.')
         if dow is not None and n-m < 14:
-            raise ValueError(f'If dow is specified, require n-m >= 14.')
+            raise ValueError('If dow is specified, require n-m >= 14.')
 
         # build report matrix r[i, j], shape (n, m)
         # corresponding to eDOO at fdate=n-i, sdate=n-i-j
@@ -716,7 +710,7 @@ class DOOCorrection:
         fdates = fdates[(fdates >= date_range[0]) & (fdates <= date_range[1])]
 
         if len(fdates) < 14:
-            raise ValueError(f'Date range must span >= 14 days.')
+            raise ValueError('Date range must span >= 14 days.')
 
         dcs = [ cls.from_doo_df(df, m=m, date_range=date_range,
                dow=dow) for dow in [0, 1, 2, 3, 4, 5, 6, None] ]
@@ -837,13 +831,9 @@ class DOOCorrection:
             ax.xaxis.set_major_locator(xtickloc)
             ax.grid()
 
-        if other_Gs is None:
-            all_Gs = [self]
-        else:
-            all_Gs = [self] + list(other_Gs)
-
+        all_Gs = [self] if other_Gs is None else [self] + list(other_Gs)
         if labels is not None and len(labels) != len(all_Gs):
-            raise IndexError(f'labels: mismatch in entries for number of curves.')
+            raise IndexError('labels: mismatch in entries for number of curves.')
 
         if labels is None:
             labels = [

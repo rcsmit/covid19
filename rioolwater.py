@@ -89,10 +89,15 @@ axf.plot(sum_df['rflow_per_capita'])
 axf.set_yscale('log')
 axf.set_title('SARS-CoV-2 RNA in rioolwater, per persoon, per dag.')
 axf.grid(True, 'minor', 'y')
-axR.set_title(f'Week-op-week groeifactor.')
+axR.set_title('Week-op-week groeifactor.')
 axR.plot(sum_df['GF'], label=f'Rioolwater (vertraging {delay} d)', color='#aaaaaa')
-axR.plot(sum_df['GF_smooth'], label=f'Rioolwater (gladgestreken)', color=colors[0],
-         ls='--')
+axR.plot(
+    sum_df['GF_smooth'],
+    label='Rioolwater (gladgestreken)',
+    color=colors[0],
+    ls='--',
+)
+
 axR.plot(nlcs.DFS['Rt_rivm']['R']**(7/4), label='o.b.v RIVM R', color=colors[1])
 
 axR.set_xlim(pd.to_datetime('2020-09-18'),

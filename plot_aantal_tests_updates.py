@@ -55,7 +55,7 @@ def load_testdata(min_date='2021-01-01', max_date='2099-01-01'):
         dfs.append(df)
         fdate += pd.Timedelta('1 d')
 
-    if len(dfs) == 0:
+    if not dfs:
         raise ValueError(f'No data loaded for range {min_date} .. {max_date}.')
     print(f'Loaded {len(dfs)} GGD test files, last one '
           f'{dfs[-1].iloc[0]["fdate"].strftime("%Y-%m-%d")}')
@@ -75,9 +75,10 @@ def plot_jump_10Aug():
 
     df = load_testdata('2021-06-01', '2021-09-01')
 
-    test_snapshots = {}
-    for fdate in ['2021-08-09', '2021-08-11']:
-        test_snapshots[fdate] = df.loc[df['fdate'] == fdate].set_index('sdate')
+    test_snapshots = {
+        fdate: df.loc[df['fdate'] == fdate].set_index('sdate')
+        for fdate in ['2021-08-09', '2021-08-11']
+    }
 
     fig, ax = plt.subplots(figsize=(8, 4), tight_layout=True)
 
@@ -199,9 +200,6 @@ def plot_daily_tests_and_delays(date_min, date_max='2099-01-01', src_col='n_test
 if __name__ == '__main__':
 
     plt.close('all')
-
-    if 0:
-        plot_jump_10Aug()
 
     plot_daily_tests_and_delays('2021-09-01')
     plot_daily_tests_and_delays('2021-09-01', src_col='n_pos')

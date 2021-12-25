@@ -138,10 +138,7 @@ def get_R_variant(vdf, vname='Alfa', Tg=4.0):
     Rs = gfacs ** expons
     Rsigmas = Rs * expons * gfac_sigmas / gfacs
     Rs[gfac_sigmas > 0.8*gfacs] = np.nan
-    # log(g+/-d) = log(g) +/- d/g
-
-
-    gdf = pd.DataFrame(index=gdates, data=dict(
+    return pd.DataFrame(index=gdates, data=dict(
         gfac=gfacs,
         gfac_sigma=gfac_sigmas,
         date_R=gdates - pd.Timedelta(3, 'd'),
@@ -149,17 +146,8 @@ def get_R_variant(vdf, vname='Alfa', Tg=4.0):
         R_sigma=Rsigmas
         ))
 
-    return gdf
-
-if 1:  # set to 0 for debugging
-    vdf = get_variant_dataframe_from_html_table()
-    vdf = add_npos_to_df(vdf)
-else:
-    vdf_store = vdf.copy()
-    df = vdf_store.copy()
-    pd.options.display.width=100
-
-
+vdf = get_variant_dataframe_from_html_table()
+vdf = add_npos_to_df(vdf)
 plt.close('all')
 fig, ax = plt.subplots(figsize=(7, 4), tight_layout=True)
 

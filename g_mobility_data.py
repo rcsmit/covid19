@@ -20,7 +20,7 @@ def download_g_mobility_data():
     """Download Google Mobility data, write to data/2020_NL_⋯.csv."""
 
     url = 'https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip'
-    print(f'Getting Google Mobility data ...')
+    print('Getting Google Mobility data ...')
     with urllib.request.urlopen(url) as response:
         data_bytes = response.read()
     zipf = zipfile.ZipFile(io.BytesIO(data_bytes))

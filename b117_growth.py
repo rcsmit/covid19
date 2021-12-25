@@ -95,9 +95,7 @@ def simulate_cases(date_ra=('2020-12-18', '2021-02-15'),
                             npos=n_tot,
                             f_b117=nis[1, :]/n_tot))
     df2 = df2.set_index('Date')
-    df = df1.merge(df2, how='outer', left_index=True, right_index=True)
-
-    return df
+    return df1.merge(df2, how='outer', left_index=True, right_index=True)
 
 def get_Rt_cases(delay=7, Tc=4):
     """Get smoothed Rt from case stats and cases stats (r7 smooth)
@@ -458,15 +456,10 @@ def simulate_and_plot_alt(conditions,
         )
 
     sim_kwargs_nom = get_sim_args_from_start_cond(**startcond_nom)
-    if variations:
-        df_lohi = monte_carlo_runs(
+    df_lohi = monte_carlo_runs(
             startcond_nom,
             **variations
-            )
-    else:
-        df_lohi = None
-
-
+            ) if variations else None
     simplot_kwargs = 'Rs,f0,title_prefix,date_ra,n0,clip_nRo,R_changes,use_r7'.split(',')
     simplot_kwargs = {k:v for (k,v) in sim_kwargs_nom.items() if k in simplot_kwargs}
 
@@ -749,19 +742,13 @@ if __name__ == '__main__':
     plt.close('all')
     nlcs.init_data()
 
-    if 1:
-        wiki=True # Write PNG for Wikipedia-suitable plots.
-        for select in ['countries', 'uk', 'ch']:
-            plot_countries_odds_ratios(select, wiki=wiki)
-            print_data_sources(select)
+    wiki=True # Write PNG for Wikipedia-suitable plots.
+    for select in ['countries', 'uk', 'ch']:
+        plot_countries_odds_ratios(select, wiki=wiki)
+        print_data_sources(select)
 
 
     ## effect of no background subtraction
     # plot_countries_odds_ratios(subtract_eng_bg=False)
 
     0 and simulate_and_plot_alt(**nl_alt_cases['nl_ak_latest'])
-    if 0: # set to 1/True to plot old data
-        pass
-        # simulate_and_plot_alt(**nl_alt_cases['nl_20201228'])
-        simulate_and_plot_alt(**nl_alt_cases['nl_ak_20210121'])
-        simulate_and_plot_alt(**nl_alt_cases['nl_20210115'])

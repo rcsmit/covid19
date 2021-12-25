@@ -91,7 +91,7 @@ def download_Rt_rivm_coronawatchNL(maxage='16 days 15 hours',  force=False):
 
     # Data via CoronawatchNL seems stale as of 2020-12-20
     url = 'https://raw.githubusercontent.com/J535D165/CoronaWatchNL/master/data-dashboard/data-reproduction/RIVM_NL_reproduction_index.csv'
-    print(f'Getting latest R data ...')
+    print('Getting latest R data ...')
     with urllib.request.urlopen(url) as response:
         data_bytes = response.read()
         if data_bytes == local_file_data:
@@ -146,7 +146,7 @@ def download_Rt_rivm(force=False):
         local_file_data = b'dummy'
 
     url = 'https://data.rivm.nl/covid-19/COVID-19_reproductiegetal.json'
-    print(f'Getting latest R data from RIVM...')
+    print('Getting latest R data from RIVM...')
     with urllib.request.urlopen(url) as response:
         json_bytes = response.read()
         f = io.BytesIO(json_bytes)
@@ -307,35 +307,30 @@ def update_cum_cases_csv(force=False):
     """Update 'cumulative data' csv file (if not recently updated)."""
 
     fpath = DATA_PATH / 'COVID-19_aantallen_gemeente_cumulatief.csv'
-    if fpath.is_file():
-        local_file_data = fpath.read_bytes()
-    else:
-        local_file_data = None
+    local_file_data = fpath.read_bytes() if fpath.is_file() else None
+    if not force and fpath.is_file():
+        # estimated last update
+        tm = time.time()
+        loc_time = time.localtime(tm)
+        day_seconds = loc_time[3]*3600 + loc_time[4]*60 + loc_time[5]
+        # RIVM releases data at 15:15.
+        tm_latest = tm - day_seconds + 15.25*3600
+        if tm_latest > tm:
+            tm_latest -= 86400
 
-    if not force:
-        if fpath.is_file():
-            # estimated last update
-            tm = time.time()
-            loc_time = time.localtime(tm)
-            day_seconds = loc_time[3]*3600 + loc_time[4]*60 + loc_time[5]
-            # RIVM releases data at 15:15.
-            tm_latest = tm - day_seconds + 15.25*3600
-            if tm_latest > tm:
-                tm_latest -= 86400
-
-            tm_file = fpath.stat().st_mtime
-            if tm_file > tm_latest + 60: # after 15:15
-                print('Not updating cumulative case file; seems to be recent enough.')
-                return
-            if tm_file > tm_latest:
-                print('Cumulative case data file may or may not be the latest version.')
-                print('Use update_cum_cases_csv(force=True) to be sure.')
-                return
+        tm_file = fpath.stat().st_mtime
+        if tm_file > tm_latest + 60: # after 15:15
+            print('Not updating cumulative case file; seems to be recent enough.')
+            return
+        if tm_file > tm_latest:
+            print('Cumulative case data file may or may not be the latest version.')
+            print('Use update_cum_cases_csv(force=True) to be sure.')
+            return
 
     #check_RIVM_message()
 
     url = 'https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeente_cumulatief.csv'
-    print(f'Getting new daily case statistics file...')
+    print('Getting new daily case statistics file...')
     with urllib.request.urlopen(url) as response:
         data_bytes = response.read()
         if data_bytes == local_file_data:

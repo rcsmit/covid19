@@ -56,8 +56,7 @@ def gauss_smooth(data, n=11, sigma=1.67, mu=0.0):
     kernel = np.exp(-0.5/sigma**2 * (xs-mu)**2)
     kernel /= kernel.sum()
 
-    smooth = smoothen(data, kernel)
-    return smooth
+    return smoothen(data, kernel)
 
 
 def calc_Rjbf(cdf, Tgen=4, Tdelay=0, sm_preset='g11', update_cdf=True, dt_dpl=0):
@@ -247,11 +246,11 @@ def infer_smoothing_kernel_rivm(ts_lo='2020-08-08', ts_hi='2021-06-15',
 
     # Reconstruct Dsm counts by applying R_rivm repeatedly.
     cdf['Dreco'] = cdf['Dsm'].copy()
+    # This is to dampen out differences from rounding errors
+    f = 0.25
     for i in range(Tgen, len(cdf)):
         idxa, idxb = cdf.index[[i-Tgen, i]]
         nreco = cdf.at[idxa, 'Dreco'] * cdf.at[idxa, 'R_rivm']
-        # This is to dampen out differences from rounding errors
-        f = 0.25
         nreco = (1-f)*nreco + f*cdf.at[idxb, 'Dsm']
         cdf.loc[idxb, 'Dreco'] = nreco
 
@@ -392,11 +391,6 @@ def calc_plot_Rjbf(fdate=None, Tgen=4, Tdelay=0, sm_preset='g11', dt_dpl=0,
 
 #%%
 if __name__ == '__main__':
-
-    if 0:
-        # Run this manually, interactively to refresh data.
-        # (Slow, don't do this automatically.)
-        ca.create_merged_summary_csv()
 
     plt.close('all')
     infer_smoothing_kernel_rivm()

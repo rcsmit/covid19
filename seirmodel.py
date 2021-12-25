@@ -105,13 +105,12 @@ class EpidemyState:
         """Return totals and deltas as Series."""
 
         (nsus, nlat, nsym, nhos, nrec, nded) = self.get_nums()
-        s = pd.Series(dict(
+        return pd.Series(dict(
             nsus=nsus, nlat=nlat, nsym=nsym, nhos=nhos, nrec=nrec, nded=nded,
             newL=self.bins[self.i_nwl],
             newH=self.bins[self.i_nwh],
             newD=self.bins[self.i_nwd],
             ))
-        return s
 
     def _get_labels(self):
         labels = [None] * self.nb
@@ -141,8 +140,7 @@ class EpidemyState:
         return f_sus * R0
 
     def as_dfrow(self):
-        df = pd.DataFrame(self.bins.reshape(1, -1), columns=self.labels)
-        return df
+        return pd.DataFrame(self.bins.reshape(1, -1), columns=self.labels)
 
     def copy(self):
         return deepcopy(self)
@@ -362,8 +360,7 @@ class EpidemyModel:
             mat = mat.todense()
 
         assert mat.shape == (len(labels), len(labels))
-        df = pd.DataFrame(mat, index=labels, columns=labels)
-        return df
+        return pd.DataFrame(mat, index=labels, columns=labels)
 
 
 
@@ -414,14 +411,14 @@ def run_simulation(
     # initialize and run to stabilize
     gfac = em.R**(em.tstep/em.T_lat)
     estate.reset(16e6, init[0]*gfac**(-init[1]/em.tstep), gfac)
-    for i in range(int(init[1]/em.tstep + 0.5)):
+    for _ in range(int(init[1]/em.tstep + 0.5)):
         em.iterate(estate)
         em.change_R(estate.get_R_from_R0(RTa[0]))
 
     # Here the real simulation starts.
     states = [estate.get_nums_series()]
     Rvals = [em.R]
-    for i in range(int(RTa[1]/em.tstep+0.5)):
+    for _ in range(int(RTa[1]/em.tstep+0.5)):
         em.iterate(estate)
         em.change_R(estate.get_R_from_R0(RTa[0]))
         states.append(estate.get_nums_series())
@@ -431,7 +428,7 @@ def run_simulation(
     T2a = estimate_T2(em, states[-2:])
 
     em.change_R(estate.get_R_from_R0(RTb[0]))
-    for i in range(int(RTb[1]/em.tstep+0.5)):
+    for _ in range(int(RTb[1]/em.tstep+0.5)):
         em.iterate(estate)
         em.change_R(estate.get_R_from_R0(RTb[0]))
         states.append(estate.get_nums_series())
